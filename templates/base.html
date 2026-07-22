@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portal Acadêmico{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    
+    {% block styles %}{% endblock %}
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand" style="display: flex; align-items: center; gap: 10px;">
+            <img src="{{ url_for('static', filename='imagem/logo.jpeg') }}"
+                 alt="Logo IFPB"
+                 style="height: 38px; width: auto; object-fit: contain; border-radius: 4px;">
+            <span>Portal EduTech - Acadêmico</span>
+        </div>
+        <div class="nav-user">
+            <span class="user-badge">👤 {{ session.get('usuario', 'Convidado') }}</span>
+            <a href="{{ url_for('logout') }}" class="btn-logout">Sair do Sistema</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>

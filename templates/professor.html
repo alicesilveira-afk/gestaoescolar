@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Diário Eletrônico do Professor - EduTech{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='professor.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="professor-panel">
+    <h3>📋 Diário de Classe - Lançamento de Notas</h3>
+    <p>Atualize as avaliações diretamente e pressione "Salvar" na linha correspondente.</p>
+
+    <div style="margin-bottom: 25px;">
+        <a href="{{ url_for('professor.chamada') }}" class="btn-chamada">
+            📅 Realizar Chamada Diária
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Estudante</th>
+                    <th>Matrícula</th>
+                    <th style="width: 90px; text-align: center;">B1</th>
+                    <th style="width: 90px; text-align: center;">B2</th>
+                    <th style="width: 90px; text-align: center;">B3</th>
+                    <th style="width: 90px; text-align: center;">B4</th>
+                    <th style="text-align: center;">Média Parcial</th>
+                    <th style="text-align: center;">Situação</th>
+                    <th style="text-align: center;">Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in alunos %}
+                <tr>
+                    <td style="font-weight: 600;">{{ aluno.nome }}</td>
+                    <td><code>{{ aluno.matricula }}</code></td>
+
+                    <form action="{{ url_for('professor.lancar_notas') }}" method="POST">
+                        <input type="hidden" name="matricula" value="{{ aluno.matricula }}">
+
+                        <td>
+                            <input type="number" step="0.1" min="0" max="10" name="b1" value="{{ aluno.b1 }}" class="input-nota" style="width: 70px; text-align: center;">
+                        </td>
+                        <td>
+                            <input type="number" step="0.1" min="0" max="10" name="b2" value="{{ aluno.b2 }}" class="input-nota" style="width: 70px; text-align: center;">
+                        </td>
+                        <td>
+                            <input type="number" step="0.1" min="0" max="10" name="b3" value="{{ aluno.b3 }}" class="input-nota" style="width: 70px; text-align: center;">
+                        </td>
+                        <td>
+                            <input type="number" step="0.1" min="0" max="10" name="b4" value="{{ aluno.b4 }}" class="input-nota" style="width: 70px; text-align: center;">
+                        </td>
+
+                        <td style="font-weight: bold; color: var(--primary-color); text-align: center;">{{ aluno.media }}</td>
+                        <td style="text-align: center;">
+                            {% if aluno.situacao == 'Aprovado' %}
+                                <span class="badge badge-success">Aprovado</span>
+                            {% elif aluno.situacao == 'Recuperação' %}
+                                <span class="badge badge-warning">Recuperação</span>
+                            {% else %}
+                                <span class="badge badge-danger">Reprovado</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center;">
+                            <button type="submit" class="btn-save">Salvar</button>
+                        </td>
+                    </form>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 20px;">Nenhum aluno cadastrado nesta turma.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

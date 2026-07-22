@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Portal EduTech - Acadêmico{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .search-box { width: 100%; max-width: 380px; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 20px; outline: none; }
+    .search-box:focus { border-color: #3b82f6; }
+    .badge { padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 13px; display: inline-block; }
+    .badge-aprovado { background-color: #dcfce7; color: #15803d; }
+    .badge-recuperacao { background-color: #fee2e2; color: #b91c1c; }
+    .btn-alerta { background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 16px; }
+    .btn-alerta:hover { color: #1d4ed8; }
+    .nota-col { text-align: center; color: #64748b; font-size: 14px; }
+    .chart-box { margin-top: 40px; background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="list-container" style="max-width: 1100px; margin: 30px auto; padding: 0 20px;">
+
+    <h2 style="color: #1e293b; margin-bottom: 20px;">LISTA DE USUÁRIOS</h2>
+
+    <input type="text" id="inputBusca" class="search-box" placeholder="🔍 Buscar por nome ou matrícula...">
+
+    <div class="table-wrapper" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <table id="tabelaUsuarios" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #f1f5f9; text-align: left;">
+                    <th style="padding: 12px;">Nome</th>
+                    <th>Matrícula</th>
+                    <th>Curso</th>
+                    <th class="nota-col">B1</th>
+                    <th class="nota-col">B2</th>
+                    <th class="nota-col">B3</th>
+                    <th class="nota-col">B4</th>
+                    <th style="text-align: center;">Média</th>
+                    <th style="text-align: center;">Situação</th>
+                    <th style="text-align: center;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in lista %}
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 12px;">
+                        <span class="aluno-nome" style="font-weight: 500; color: #1e293b;">{{ usuario.nome }}</span><br>
+                        <small style="color: #94a3b8;">{{ usuario.email }}</small>
+                    </td>
+                    <td class="aluno-matricula" style="color: #64748b;">{{ usuario.matricula }}</td>
+                    <td><span style="background-color: #e2e8f0; padding: 4px 8px; border-radius: 4px; font-size: 13px;">{{ usuario.curso }}</span></td>
+                    <td class="nota-col">{{ usuario.b1 }}</td>
+                    <td class="nota-col">{{ usuario.b2 }}</td>
+                    <td class="nota-col">{{ usuario.b3 }}</td>
+                    <td class="nota-col">{{ usuario.b4 }}</td>
+                    <td style="text-align: center; font-weight: bold;">{{ usuario.media }}</td>
+                    <td style="text-align: center;">
+                        {% if usuario.situacao == 'Aprovado' %}
+                            <span class="badge badge-aprovado">Aprovado</span>
+                        {% else %}
+                            <span class="badge badge-recuperacao">Recuperação</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center;">
+                        <button class="btn-alerta" onclick="enviarAlerta('{{ usuario.nome }}', '{{ usuario.email }}')" title="Enviar alerta">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="chart-box">
+        <h3 style="text-align: center; color: #1e293b; margin-bottom: 15px;">Média de Notas por Curso</h3>
+        <canvas id="graficoCursos" style="max-height: 280px;"></canvas>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="javascript:history.back()" style="color: #1e3a8a; text-decoration: none; font-weight: 500;">‹ Voltar à página anterior</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // JS do Filtro Dinâmico
+    document.getElementById('inputBusca').addEventListener('keyup', function() {
+        let filtro = this.value.toLowerCase();
+        let linhas = document.querySelectorAll('#tabelaUsuarios tbody tr');
+        linhas.forEach(linha => {
+            let nome = linha.querySelector('.aluno-nome').textContent.toLowerCase();
+            let matricula = linha.querySelector('.aluno-matricula').textContent.toLowerCase();
+            linha.style.display = (nome.includes(filtro) || matricula.includes(filtro)) ? '' : 'none';
+        });
+    });
+
+    // JS do Alerta
+    function enviarAlerta(nome, email) {
+        alert(`📬 Alerta enviado com sucesso!\n\nDestinatário: ${nome}\nE-mail: ${email}`);
+    }
+
+    // Processamento do Gráfico por Cursos do Banco de Dados
+    const dadosCursos = {};
+    {% for usuario in lista %}
+        if (!dadosCursos["{{ usuario.curso }}"]) {
+            dadosCursos["{{ usuario.curso }}"] = { soma: 0, qtd: 0 };
+        }
+        dadosCursos["{{ usuario.curso }}"].soma += {{ usuario.media }};
+        dadosCursos["{{ usuario.curso }}"].qtd += 1;
+    {% endfor %}
+
+    const labelsCursos = Object.keys(dadosCursos);
+    const mediasCursos = labelsCursos.map(curso => (dadosCursos[curso].soma / dadosCursos[curso].qtd).toFixed(1));
+
+    const ctx = document.getElementById('graficoCursos').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labelsCursos,
+            datasets: [{
+                label: 'Média do Curso',
+                data: mediasCursos,
+                backgroundColor: 'rgba(30, 58, 138, 0.2)',
+                borderColor: 'rgba(30, 58, 138, 1)',
+                borderWidth: 2,
+                borderRadius: 6
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 10 } } }
+    });
+</script>
+{% endblock %}

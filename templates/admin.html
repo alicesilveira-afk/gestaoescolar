@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel do Administrador - EduTech{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="admin-panel">
+
+    <div class="card-form">
+        <h3>NOVO REGISTRO DE ESTUDANTE</h3>
+        <p class="subtitle">Insira as informações básicas para abrir o prontuário no banco de dados</p>
+
+        <form action="{{ url_for('admin.cadastrar') }}" method="POST" class="form-grid">
+            <div class="form-group full-width">
+                <label>Nome Completo</label>
+                <input type="text" name="nome" placeholder="Ex: João Silva de Sousa" required>
+            </div>
+            <div class="form-group">
+                <label>Nº de Matrícula</label>
+                <input type="text" name="matricula" placeholder="Ex: 20261014" required>
+            </div>
+            <div class="form-group">
+                <label>E-mail Institucional</label>
+                <input type="email" name="email" placeholder="nome.sobrenome@estudante.ifpb.edu.br" required>
+            </div>
+
+            <div class="form-group">
+                <label>Curso Técnico/Superior</label>
+                <select name="curso" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: white;">
+                    <option value="" disabled selected>Selecione o curso...</option>
+                    <option value="Ciência da Computação">Ciência da Computação</option>
+                    <option value="Informática">Informática</option>
+                    <option value="Meio Ambiente">Meio Ambiente</option>
+                    <option value="Edificações">Edificações</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Data de Ingresso</label>
+                <input type="date" name="data" required>
+            </div>
+
+            <div class="form-group full-width" style="margin-top: 10px;">
+                <button type="submit" class="btn-primary">Efetivar Matrícula</button>
+            </div>
+        </form>
+    </div>
+
+    <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <h3 style="color: var(--primary-color); margin: 0;">📋 Prontuários Ativos</h3>
+        <input type="text" id="inputBusca" placeholder="🔍 Buscar por nome ou matrícula..." style="padding: 10px 15px; width: 100%; max-width: 320px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
+    </div>
+
+    <div class="table-responsive">
+        <table id="tabelaAlunos">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Matrícula</th>
+                    <th>Curso</th>
+                    <th style="text-align: center;">B1</th>
+                    <th style="text-align: center;">B2</th>
+                    <th style="text-align: center;">B3</th>
+                    <th style="text-align: center;">B4</th>
+                    <th style="text-align: center;">Média</th>
+                    <th style="text-align: center;">Situação</th>
+                    <th style="text-align: center;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in alunos %}
+                <tr>
+                    <td style="font-weight: 600;">
+                        <span class="aluno-nome">{{ aluno.nome }}</span><br>
+                        <small style="color: #94a3b8; font-weight: normal;">{{ aluno.email }}</small>
+                    </td>
+                    <td><code class="aluno-matricula">{{ aluno.matricula }}</code></td>
+                    <td>{{ aluno.curso }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b1 }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b2 }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b3 }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b4 }}</td>
+                    <td style="text-align: center; font-weight: bold;">{{ aluno.media }}</td>
+                    <td style="text-align: center;">
+                        {% if aluno.situacao == 'Aprovado' %}
+                            <span style="background: #dcfce7; color: #16a34a; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 13px;">Aprovado</span>
+                        {% elif aluno.situacao == 'Reprovado por Falta' %}
+                            <span style="background: #fef3c7; color: #d97706; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 13px;">Rep. Falta</span>
+                        {% else %}
+                            <span style="background: #fee2e2; color: #dc2626; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 13px;">Recuperação</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center;">
+                        <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                            <button onclick="enviarAlerta('{{ aluno.nome }}', '{{ aluno.email }}')" title="Enviar alerta" style="background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 15px;">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+
+                            <button onclick="alert('Gerando PDF do boletim de {{ aluno.nome }}...')" title="Imprimir Boletim" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 15px;">
+                                <i class="fa-solid fa-print"></i>
+                            </button>
+
+                            <a href="{{ url_for('admin.deletar', matricula=aluno.matricula) }}" class="btn-delete" onclick="return confirm('Deseja realmente excluir este aluno?')" style="padding: 4px 8px; font-size: 13px;">Remover</a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="10" style="text-align: center; color: var(--text-muted); padding: 20px;">Nenhum aluno matriculado até o momento.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Função do Filtro de Busca Dinâmico
+    document.getElementById('inputBusca').addEventListener('keyup', function() {
+        let filtro = this.value.toLowerCase();
+        let linhas = document.querySelectorAll('#tabelaAlunos tbody tr');
+
+        linhas.forEach(linha => {
+            let nomeElemento = linha.querySelector('.aluno-nome');
+            let matriculaElemento = linha.querySelector('.aluno-matricula');
+
+            if (nomeElemento && matriculaElemento) {
+                let nome = nomeElemento.textContent.toLowerCase();
+                let matricula = matriculaElemento.textContent.toLowerCase();
+
+                if (nome.includes(filtro) || matricula.includes(filtro)) {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = 'none';
+                }
+            }
+        });
+    });
+
+    // Função do Botão de Alerta (Aviãozinho)
+    function enviarAlerta(nome, email) {
+        alert(`📬 Alerta de notas enviado com sucesso!\n\nDestinatário: ${nome}\nE-mail: ${email}`);
+    }
+</script>
+{% endblock %}

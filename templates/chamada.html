@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Diário de Classe - Chamada Interativa{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='chamada.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="attendance-container">
+    <div class="attendance-header">
+        <h2>Diário de Classe</h2>
+        <p>Selecione a presença ou ausência dos alunos cadastrados para o dia de hoje.</p>
+    </div>
+
+    <form action="{{ url_for('professor.registrar_presenca') }}" method="POST">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 150px;">Matrícula</th>
+                        <th>Nome do Aluno</th>
+                        <th style="width: 220px; text-align: center;">Status de Presença</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td><span class="matricula-badge">{{ aluno.matricula }}</span></td>
+                        <td><span class="aluno-nome">{{ aluno.nome }}</span></td>
+                        <td>
+                            <div class="radio-toggle-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="pres-{{ aluno.matricula }}" name="{{ aluno.matricula }}" value="Presente" checked>
+                                    <label for="pres-{{ aluno.matricula }}" class="radio-label label-presente">Presente</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="aus-{{ aluno.matricula }}" name="{{ aluno.matricula }}" value="Ausente">
+                                    <label for="aus-{{ aluno.matricula }}" class="radio-label label-ausente">Ausente</label>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <button type="submit" class="btn-submit-attendance">Finalizar e Salvar Chamada</button>
+    </form>
+
+    <a href="{{ url_for('professor.dashboard') }}" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Voltar ao Painel do Professor
+    </a>
+</div>
+{% endblock %}

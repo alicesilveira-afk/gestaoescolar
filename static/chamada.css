@@ -1,0 +1,175 @@
+:root {
+    --primary-color: #1e3a8a;
+    --background: #f8fafc;
+    --surface: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background);
+    color: var(--text-main);
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.attendance-container {
+    background: var(--surface);
+    max-width: 800px;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 30px;
+}
+
+.attendance-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+
+.attendance-header h2 {
+    color: var(--primary-color);
+    margin: 0 0 8px 0;
+    font-size: 24px;
+}
+
+.attendance-header p {
+    color: var(--text-muted);
+    margin: 0;
+    font-size: 14px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th {
+    background-color: #f1f5f9;
+    color: var(--text-main);
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+}
+
+td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.matricula-badge {
+    background: #e2e8f0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #334155;
+}
+
+.aluno-nome {
+    font-weight: 600;
+    color: #334155;
+}
+
+.radio-toggle-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.radio-option {
+    position: relative;
+}
+
+.radio-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.radio-label {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background-color: #fff;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    text-align: center;
+    user-select: none;
+}
+
+.radio-option input[type="radio"]:checked + .label-presente {
+    background-color: var(--success);
+    color: white;
+    border-color: var(--success);
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.radio-option input[type="radio"]:checked + .label-ausente {
+    background-color: var(--danger);
+    color: white;
+    border-color: var(--danger);
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+.radio-label:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+/* ESTILIZAÇÃO DO BOTÃO QUE ESTAVA FALTANDO */
+.btn-submit-attendance {
+    display: block;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 20px;
+}
+
+.btn-submit-attendance:hover {
+    background-color: #1d4ed8;
+}
+
+.back-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: #475569;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+    margin-top: 15px;
+}
+
+.back-link:hover {
+    color: var(--primary-color);
+}

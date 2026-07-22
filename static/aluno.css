@@ -1,0 +1,163 @@
+.aluno-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.aluno-header-box {
+    background: #1e3a8a;
+    color: white;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 25px;
+}
+
+.info-item strong {
+    color: #64748b;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.info-item span {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+/* ==========================================================================
+   AJUSTADO: Grade alterada de 3 para 5 colunas (B1, B2, B3, B4 e Média)
+   ========================================================================== */
+.grades-display {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 1.2fr;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.grade-box {
+    background: #f8fafc;
+    padding: 12px 8px;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+}
+
+.grade-box.highlight {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.grade-box label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.grade-box h4 {
+    font-size: 22px;
+    color: #1e293b;
+    margin-top: 6px;
+    margin-bottom: 0;
+}
+
+.grade-box.highlight h4 {
+    color: #1e3a8a;
+    font-weight: 800;
+}
+
+/* Painel de rodapé da situação */
+.status-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #f1f5f9;
+    border-radius: 6px;
+}
+
+.recuperacao-alert {
+    background: #fffbeb;
+    border: 1px solid #fef3c7;
+    padding: 10px 15px;
+    border-radius: 6px;
+    text-align: right;
+}
+
+.frequencia-panel {
+    margin-top: 35px;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e2e8f0;
+}
+
+/* Título da seção */
+.frequencia-panel h3 {
+    color: #1e3a8a;
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* Container dos Cards de Contador */
+.cards-contador {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.card-resumo {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid transparent;
+}
+
+.card-resumo.presencas {
+    background-color: #ecfdf5;
+    color: #065f46;
+    border-color: #a7f3d0;
+}
+
+.card-resumo.faltas {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-color: #fca5a5;
+}
+
+.badge-frequencia {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+}
+
+.badge-frequencia.compareceu {
+    background-color: #10b981; /* Verde */
+}
+
+.badge-frequencia.falta {
+    background-color: #ef4444; /* Vermelho */
+}

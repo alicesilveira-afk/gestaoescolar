@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Meu Boletim Acadêmico - EduTech{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='aluno.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="aluno-panel" style="max-width: 850px; margin: 0 auto;">
+
+    <div class="aluno-header-box">
+        <h2 style="margin-bottom: 5px;">📄 Boletim Escolar</h2>
+        <p style="opacity: 0.9; font-size: 14px;">Dados oficiais extraídos do banco de dados institucional</p>
+    </div>
+
+    {% if aluno %}
+    <div class="aluno-card">
+
+        <div class="info-grid">
+            <div class="info-item"><strong style="color: var(--text-muted);">Nome do Aluno:</strong> <span>{{ aluno.nome }}</span></div>
+            <div class="info-item"><strong style="color: var(--text-muted);">Matrícula:</strong> <span><code>{{ aluno.matricula }}</code></span></div>
+            <div class="info-item"><strong style="color: var(--text-muted);">Curso Cadastrado:</strong> <span>{{ aluno.curso }}</span></div>
+            <div class="info-item"><strong style="color: var(--text-muted);">Data de Entrada:</strong> <span>{{ aluno.data }}</span></div>
+        </div>
+
+        <div class="grades-display" style="display: grid; grid-template-columns: repeat(4, 1fr) 1.2fr; gap: 12px; margin-top: 20px;">
+            <div class="grade-box">
+                <label>1º Bimestre</label>
+                <h4>{{ aluno.b1 if aluno.b1 is not none and aluno.b1 != '' else '-' }}</h4>
+            </div>
+            <div class="grade-box">
+                <label>2º Bimestre</label>
+                <h4>{{ aluno.b2 if aluno.b2 is not none and aluno.b2 != '' else '-' }}</h4>
+            </div>
+            <div class="grade-box">
+                <label>3º Bimestre</label>
+                <h4>{{ aluno.b3 if aluno.b3 is not none and aluno.b3 != '' else '-' }}</h4>
+            </div>
+            <div class="grade-box">
+                <label>4º Bimestre</label>
+                <h4>{{ aluno.b4 if aluno.b4 is not none and aluno.b4 != '' else '-' }}</h4>
+            </div>
+            <div class="grade-box highlight">
+                <label>Média Final</label>
+                <h4>{{ aluno.media }}</h4>
+            </div>
+        </div>
+
+        <div class="status-footer" style="margin-top: 25px;">
+            <div>
+                <span style="font-size: 14px; color: var(--text-muted); font-weight: 500;">Situação Acadêmica Atual:</span>
+                <div style="margin-top: 5px;">
+                    {% if aluno.situacao == 'Aprovado' %}
+                        <span class="badge badge-success" style="font-size: 14px; padding: 6px 16px;">✓ Aprovado</span>
+                    {% elif aluno.situacao == 'Recuperação' %}
+                        <span class="badge badge-warning" style="font-size: 14px; padding: 6px 16px;">⚠️ Em Recuperação</span>
+                    {% elif aluno.situacao == 'Reprovado por Falta' %}
+                        <span class="badge badge-danger" style="font-size: 14px; padding: 6px 16px;">❌ Reprovado por Falta</span>
+                    {% else %}
+                        <span class="badge badge-danger" style="font-size: 14px; padding: 6px 16px;">❌ Reprovado por Nota</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if aluno.situacao == 'Recuperação' %}
+            <div class="recuperacao-alert">
+                <span style="font-size: 12px; color: #b45309; font-weight: 600;">Exigência para Exame Final:</span>
+                <h4 style="color: #92400e; font-size: 16px; margin-top: 2px;">Nota mínima necessária: {{ aluno.nota_necessaria_final }}</h4>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="frequencia-panel" style="margin-top: 30px;">
+        <h3>📅 Histórico de Frequência</h3>
+
+        <div class="cards-contador">
+            <div class="card-resumo presencas">
+                Presenças: {{ total_presencas }}
+            </div>
+            <div class="card-resumo faltas">
+                Faltas: {{ total_faltas }}
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                <thead>
+                    <tr style="background-color: #f8fafc;">
+                        <th style="padding: 12px; border-bottom: 2px solid #e2e8f0; color: #475569; font-weight: 600;">Data da Aula</th>
+                        <th style="padding: 12px; border-bottom: 2px solid #e2e8f0; color: #475569; font-weight: 600;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for presenca in presencas %}
+                    <tr>
+                        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; color: #334155;">
+                            {{ presenca.data.strftime('%d/%m/%Y') }}
+                        </td>
+                        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
+                            {% if presenca.status == 'Presente' %}
+                                <span class="badge-frequencia compareceu">Presente</span>
+                            {% else %}
+                                <span class="badge-frequencia falta">Falta</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2" style="padding: 20px; text-align: center; color: #64748b; font-style: italic;">
+                            Nenhum registro de chamada localizado para você.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="aluno-card" style="text-align: center; color: var(--text-muted); padding: 40px;">
+        ⚠️ Suas credenciais de matrícula provisória não foram localizadas na base de dados ativa pelo Administrador.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

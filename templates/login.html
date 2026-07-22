@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Gestão Escolar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>🏫 Gestão Escolar</h2>
+                <p>Insira suas credenciais para acessar a plataforma</p>
+            </div>
+
+            <form action="{{ url_for('logar') }}" method="POST">
+                <div class="input-group">
+                    <label for="login">Usuário</label>
+                    <input type="text" id="login" name="login" placeholder="Ex: admin, professor ou sua matrícula" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="senha">Senha de Acesso</label>
+                    <input type="password" id="senha" name="senha" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-login">Entrar no Sistema</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
