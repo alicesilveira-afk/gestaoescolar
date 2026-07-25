@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from config import db
 
 from blueprints.bp_admin import bp_admin
 from blueprints.bp_aluno import bp_aluno
 from blueprints.bp_professor import bp_professor
+
+from modelos.aluno import Aluno
 from dao.aluno_dao import AlunoDAO
 
 app = Flask(__name__)
@@ -12,7 +14,6 @@ app.secret_key = 'KJ#H4k3jh412dasd'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gestao_escolar.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 
 db.init_app(app)
 
@@ -31,71 +32,82 @@ def index():
 
 @app.route('/logar', methods=['POST'])
 def logar():
-    login = request.form.get('login')
-    senha = request.form.get('senha')
+    login_input = request.form.get('login', '').strip()
+    senha_input = request.form.get('senha', '').strip()
 
-
-    if login == 'admin' and senha == '123':
+    if login_input == 'admin' and senha_input == '123':
         session['usuario'] = 'Administrador'
+        session['perfil'] = 'Admin'
         return redirect(url_for('admin.dashboard'))
 
-
-    elif login == 'professor' and senha == '123':
+    elif login_input.lower() == 'professor' and senha_input == '123':
         session['usuario'] = "Professor"
+        session['perfil'] = 'Professor'
         return redirect(url_for('professor.dashboard'))
 
-    elif login and login.isdigit() and senha == '123':
-        dao = AlunoDAO()
+    aluno = Aluno.query.filter(
+        (Aluno.matricula == login_input) | (Aluno.nome == login_input)
+    ).first()
+
+    if aluno and (aluno.senha == senha_input or senha_input == '123'):
+        session['usuario'] = aluno.nome
+        session['matricula'] = aluno.matricula
+        session['perfil'] = 'Aluno'
+        return redirect(url_for('aluno.dashboard'))
+
+    return render_template('login.html', erro="Usuário ou senha incorretos.")
+
+@app.route('/cadastrar', methods=['GET', 'POST'])
+def cadastrar():
+    if request.method == 'POST':
+        usuario = request.form.get('usuario', '').strip()
+        senha = request.form.get('senha', '').strip()
+        perfil = request.form.get('perfil')
+
+        if not usuario or not senha:
+            return render_template('cadastrar.html', erro="Preencha todos os campos!")
+
+        if perfil == 'Aluno':
+            dao = AlunoDAO()
+
+            novo_aluno = Aluno(
+                nome=usuario,
+                matricula=usuario,
+                senha=senha,
+                curso='Técnico em Informática'
+            )
+
+            sucesso, mensagem = dao.salvar(novo_aluno)
+
+            if sucesso:
+
+                session['usuario'] = novo_aluno.nome
+                session['matricula'] = novo_aluno.matricula
+                session['perfil'] = 'Aluno'
+                return redirect(url_for('aluno.dashboard'))
+            else:
+                return render_template('cadastrar.html', erro=mensagem)
 
 
-        try:
-            aluno_encontrado = dao.buscar_por_matricula(int(login))
-        except (ValueError, TypeError):
-            aluno_encontrado = dao.buscar_por_matricula(login)
+        elif perfil == 'Professor':
 
+            session['usuario'] = usuario
+            session['perfil'] = 'Professor'
+            return redirect(url_for('professor.dashboard'))
 
-        if aluno_encontrado:
-            session['usuario'] = aluno_encontrado.nome
-            session['matricula'] = aluno_encontrado.matricula
-            return redirect(url_for('aluno.dashboard'))
-
-        return render_template('login.html')
-
-    else:
-        return render_template('login.html')
+    return render_template('cadastrar.html')
 
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return render_template('login.html')
+    return redirect(url_for('index'))
+
 
 @app.route('/listarusuarios')
 def listarusuarios():
-    class Usuario:
-        def __init__(self, nome, matricula, curso, email, b1, b2, b3, b4):
-            self.nome = nome
-            self.matricula = matricula
-            self.curso = curso
-            self.email = email
-            # Notas dos 4 Bimestres
-            self.b1 = float(b1)
-            self.b2 = float(b2)
-            self.b3 = float(b3)
-            self.b4 = float(b4)
-            # Cálculo automático da média anual
-            self.media = round((self.b1 + self.b2 + self.b3 + self.b4) / 4, 1)
-            # Regra de negócio automatizada para a situação
-            self.situacao = "Aprovado" if self.media >= 7.0 else "Recuperação"
-
-
-    us1 = Usuario('Alice Batista da Silveira', '202418660018', 'Informática', 'silveiraalice002@gmail.com', 8.0, 7.5,
-                  9.0, 8.5)
-    us2 = Usuario('Francisco David', '202418660022', 'Informática', 'franciscodavid@gmail.com', 6.0, 5.5, 7.0, 6.5)
-    us3 = Usuario('rene', '202418660035', 'Meio Ambiente', 'mirela@gmail.com', 9.0, 8.5, 9.5, 9.0)
-    us4 = Usuario('junior', '202418660040', 'Edificações', 'junior@gmail.com', 5.0, 6.0, 5.5, 5.0)
-
-    lista = [us1, us2, us3, us4]
+    dao = AlunoDAO()
+    lista = dao.listar_todos()
     return render_template('index.html', usuarios=lista)
 
 

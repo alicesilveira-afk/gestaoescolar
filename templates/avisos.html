@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Quadro de Avisos - EduTech{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='avisos.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="avisos-wrapper">
+
+    <div class="avisos-header">
+        <h2>📌 Quadro de Avisos da Turma</h2>
+    </div>
+
+    {% if session.get('usuario') == 'Professor' %}
+    <div class="card-publicar">
+        <h3>Publicar Novo Recado</h3>
+        <form action="{{ url_for('professor.publicar_aviso') }}" method="POST">
+            <textarea name="mensagem" placeholder="Escreva um comunicado importante para a turma..." required></textarea>
+            <button type="submit" class="btn-publicar">📢 Publicar Aviso</button>
+        </form>
+    </div>
+    {% endif %}
+
+    <div class="mural-avisos">
+        {% for aviso in avisos %}
+        <div class="card-aviso">
+            <daiv class="card-aviso-top">
+                <span class="autor-badge">👤 {{ aviso.autor }}</span>
+                <span class="data-tag">📅 {{ aviso.data }}</span>
+            </daiv>
+            <div class="mensagem-texto">
+                {{ aviso.mensagem }}
+            </div>
+        </div>
+        {% else %}
+        <div class="aviso-vazio">
+            Nenhum aviso publicado até o momento.
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,3 +1,7 @@
+/* ==========================================================================
+   PAINEL DO PROFESSOR (EduTech)
+   ========================================================================== */
+
 .professor-panel h3 {
     color: #1e3a8a;
     font-size: 22px;
@@ -10,8 +14,12 @@
     margin-bottom: 25px;
 }
 
+/* ==========================================================================
+   INPUTS DE NOTA (B1, B2, B3, B4)
+   ========================================================================== */
+
 .input-nota {
-    width: 65px; /* Reduzido levemente de 75px para 65px para caber os 4 bimestres lado a lado sem apertar a tabela */
+    width: 65px; /* Reduzido levemente para caber os 4 bimestres lado a lado sem apertar a tabela */
     padding: 6px 10px;
     border: 1px solid #cbd5e1;
     border-radius: 4px;
@@ -27,7 +35,7 @@
     background-color: #ffffff;
 }
 
-/* Remove as setinhas padrão de aumento/diminuição de número do navegador nos campos de nota */
+/* Remove as setinhas padrão de número do navegador nos campos de nota */
 .input-nota::-webkit-outer-spin-button,
 .input-nota::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -38,6 +46,11 @@
     -moz-appearance: textfield;
 }
 
+/* ==========================================================================
+   BOTÕES DE AÇÃO E NAVEGAÇÃO
+   ========================================================================== */
+
+/* Botão de Salvar Nota na Tabela */
 .btn-save {
     background-color: #3b82f6;
     color: white;
@@ -54,9 +67,10 @@
     background-color: #2563eb;
 }
 
+/* Botão de Realizar Chamada (Verde Esmeralda) */
 .btn-chamada {
     display: inline-block;
-    background-color: #10b981; /* Verde esmeralda chique */
+    background-color: #10b981;
     color: white;
     padding: 12px 20px;
     text-decoration: none;
@@ -68,10 +82,33 @@
 }
 
 .btn-chamada:hover {
-    background-color: #059669; /* Verde um pouco mais escuro no hover */
+    background-color: #059669;
     transform: translateY(-1px);
 }
 
 .btn-chamada:active {
+    transform: translateY(0);
+}
+
+/* Botão do Quadro de Avisos (Azul) */
+.btn-avisos {
+    display: inline-block;
+    background-color: #2563eb;
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1);
+}
+
+.btn-avisos:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.btn-avisos:active {
     transform: translateY(0);
 }

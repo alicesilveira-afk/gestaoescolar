@@ -114,3 +114,100 @@
     font-size: 13px;
     border: 1px solid #e2e8f0;
 }
+
+/* ==========================================
+   PAINEL ADMIN & TABELAS
+   ========================================== */
+
+/* Container Principal do Card Admin */
+.card-admin {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px auto;
+    max-width: 1000px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e2e8f0;
+    font-family: 'Inter', -apple-system, sans-serif;
+}
+
+/* Título do Card */
+.card-admin h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Tabela de Usuários */
+.card-admin table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+/* Cabeçalho da Tabela */
+.card-admin thead tr {
+    background-color: #f8fafc;
+    text-align: left;
+}
+
+.card-admin th {
+    padding: 12px 14px;
+    border-bottom: 2px solid #e2e8f0;
+    color: #475569;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Linhas do Corpo da Tabela */
+.card-admin td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+    vertical-align: middle;
+}
+
+/* Efeito Hover nas Linhas */
+.card-admin tbody tr:hover {
+    background-color: #f1f5f9;
+    transition: background-color 0.15s ease-in-out;
+}
+
+/* Estilo do Código/Matrícula */
+.card-admin code {
+    background-color: #e2e8f0;
+    color: #0f172a;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Mensagem quando não há registros */
+.card-admin .no-data {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    font-style: italic;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 600px) {
+    .card-admin {
+        padding: 15px;
+        overflow-x: auto;
+    }
+
+    .card-admin table {
+        min-width: 500px;
+    }
+}

@@ -20,9 +20,9 @@ class AlunoDAO:
         return Aluno.query.order_by(Aluno.nome).all()
 
     def buscar_por_matricula(self, matricula):
-        return Aluno.query.filter_by(matricula=matricula).first()
+        # Converte para string para garantir compatibilidade se o formulário enviar int ou str
+        return Aluno.query.filter_by(matricula=str(matricula).strip()).first()
 
-    # MODIFICADO: Atualizado para suportar a gravação dos 4 bimestres se necessário
     def atualizar_notas(self, matricula, b1, b2, b3, b4):
         aluno = self.buscar_por_matricula(matricula)
         if aluno:
@@ -33,14 +33,19 @@ class AlunoDAO:
                 aluno.b4 = float(b4) if b4 else 0.0
                 db.session.commit()
                 return True
-            except ValueError:
+            except (ValueError, TypeError):
+                db.session.rollback()
                 return False
         return False
 
     def deletar(self, matricula):
         aluno = self.buscar_por_matricula(matricula)
         if aluno:
-            db.session.delete(aluno)
-            db.session.commit()
-            return True
+            try:
+                db.session.delete(aluno)
+                db.session.commit()
+                return True
+            except Exception:
+                db.session.rollback()
+                return False
         return False

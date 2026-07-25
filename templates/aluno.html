@@ -4,6 +4,7 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='aluno.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -12,6 +13,12 @@
     <div class="aluno-header-box">
         <h2 style="margin-bottom: 5px;">📄 Boletim Escolar</h2>
         <p style="opacity: 0.9; font-size: 14px;">Dados oficiais extraídos do banco de dados institucional</p>
+    </div>
+
+    <div style="margin-bottom: 25px; display: flex; justify-content: flex-end;">
+        <a href="{{ url_for('professor.ver_avisos') }}" class="btn-avisos" style="background-color: #2563eb; color: #ffffff; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); transition: all 0.2s ease-in-out;">
+            📌 Ver Quadro de Avisos
+        </a>
     </div>
 
     {% if aluno %}
@@ -71,6 +78,13 @@
             {% endif %}
         </div>
 
+        <div style="margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;">
+            <h3 style="color: #1e3a8a; font-size: 16px; margin-top: 0; margin-bottom: 15px;">📊 Evolução do Desempenho Escolar</h3>
+            <div style="position: relative; height: 250px; width: 100%;">
+                <canvas id="graficoNotas"></canvas>
+            </div>
+        </div>
+
     </div>
 
     <div class="frequencia-panel" style="margin-top: 30px;">
@@ -126,4 +140,51 @@
     {% endif %}
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('graficoNotas');
+        if (!ctx) return;
+
+        const b1 = {{ aluno.b1 if aluno.b1 is not none and aluno.b1 != '' else 'null' }};
+        const b2 = {{ aluno.b2 if aluno.b2 is not none and aluno.b2 != '' else 'null' }};
+        const b3 = {{ aluno.b3 if aluno.b3 is not none and aluno.b3 != '' else 'null' }};
+        const b4 = {{ aluno.b4 if aluno.b4 is not none and aluno.b4 != '' else 'null' }};
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['1º Bimestre', '2º Bimestre', '3º Bimestre', '4º Bimestre'],
+                datasets: [{
+                    label: 'Sua Nota',
+                    data: [b1, b2, b3, b4],
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#1e3a8a',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 10,
+                        ticks: { stepSize: 2 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}

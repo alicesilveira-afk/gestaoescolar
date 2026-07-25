@@ -186,3 +186,47 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #172554;
 }
+
+.register-link {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.register-link p {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+}
+
+.register-link a {
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.register-link a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* Campo de Seleção (Dropdown) */
+.select-field {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    font-size: 14px;
+    color: #1e293b;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.select-field:focus {
+    border-color: #2563eb;
+    background-color: #ffffff;
+}
