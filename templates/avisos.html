@@ -13,7 +13,7 @@
         <h2>📌 Quadro de Avisos da Turma</h2>
     </div>
 
-    {% if session.get('usuario') == 'Professor' %}
+    {% if session.get('perfil') == 'Professor' %}
     <div class="card-publicar">
         <h3>Publicar Novo Recado</h3>
         <form action="{{ url_for('professor.publicar_aviso') }}" method="POST">
@@ -26,10 +26,10 @@
     <div class="mural-avisos">
         {% for aviso in avisos %}
         <div class="card-aviso">
-            <daiv class="card-aviso-top">
+            <div class="card-aviso-top">
                 <span class="autor-badge">👤 {{ aviso.autor }}</span>
                 <span class="data-tag">📅 {{ aviso.data }}</span>
-            </daiv>
+            </div>
             <div class="mensagem-texto">
                 {{ aviso.mensagem }}
             </div>

@@ -1,9 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from config import db
 from modelos.aluno import Aluno
+from modelos.professor import Professor
+from modelos.nota import Nota
 from dao.aluno_dao import AlunoDAO
+from dao.professor_dao import ProfessorDAO
 
 bp_admin = Blueprint('admin', __name__)
-dao = AlunoDAO()
+aluno_dao = AlunoDAO()
+prof_dao = ProfessorDAO()
 
 
 @bp_admin.route('/admin')
@@ -12,10 +17,16 @@ def dashboard():
     if session.get('usuario') != 'Administrador':
         return redirect(url_for('index'))
 
-    # Traz todos os alunos cadastrados ordenados por nome via DAO
-    alunos = dao.listar_todos()
+    alunos = aluno_dao.listar_todos()
+    professores = prof_dao.listar_todos()
+    todas_notas = Nota.query.all()
 
-    return render_template('admin.html', alunos=alunos)
+    return render_template(
+        'admin.html',
+        alunos=alunos,
+        professores=professores,
+        todas_notas=todas_notas
+    )
 
 
 @bp_admin.route('/admin/cadastrar', methods=['POST'])
@@ -23,14 +34,19 @@ def cadastrar():
     if session.get('usuario') != 'Administrador':
         return redirect(url_for('index'))
 
-    # Captura e tratamento seguro de notas
-    try:
-        b1 = float(request.form.get('b1') or 0.0)
-        b2 = float(request.form.get('b2') or 0.0)
-        b3 = float(request.form.get('b3') or 0.0)
-        b4 = float(request.form.get('b4') or 0.0)
-    except ValueError:
-        b1 = b2 = b3 = b4 = 0.0
+    def extrair_nota(campo):
+        val = request.form.get(campo)
+        if val is not None and str(val).strip() != '':
+            try:
+                return float(val)
+            except (ValueError, TypeError):
+                return None
+        return None
+
+    b1 = extrair_nota('b1')
+    b2 = extrair_nota('b2')
+    b3 = extrair_nota('b3')
+    b4 = extrair_nota('b4')
 
     matricula = request.form.get('matricula')
     nome = request.form.get('nome')
@@ -41,7 +57,7 @@ def cadastrar():
     novo_aluno = Aluno(
         nome=nome,
         matricula=matricula,
-        senha='123',  # Senha padrão ao ser cadastrado pelo Admin
+        senha='123',
         email=email,
         curso=curso,
         data=data,
@@ -51,7 +67,7 @@ def cadastrar():
         b4=b4
     )
 
-    sucesso, mensagem = dao.salvar(novo_aluno)
+    sucesso, mensagem = aluno_dao.salvar(novo_aluno)
     flash(mensagem, 'success' if sucesso else 'error')
     return redirect(url_for('admin.dashboard'))
 
@@ -61,5 +77,37 @@ def deletar(matricula):
     if session.get('usuario') != 'Administrador':
         return redirect(url_for('index'))
 
-    dao.deletar(matricula)
+    aluno = Aluno.query.filter_by(matricula=str(matricula).strip()).first()
+
+    if aluno:
+        try:
+            db.session.delete(aluno)
+            db.session.commit()
+            flash("Aluno e todas as suas notas associadas foram removidos!", "success")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Erro ao remover aluno: {str(e)}", "error")
+    else:
+        flash("Aluno não encontrado.", "error")
+
+    return redirect(url_for('admin.dashboard'))
+
+
+@bp_admin.route('/admin/deletar_professor/<int:id>')
+def deletar_professor(id):
+    if session.get('usuario') != 'Administrador':
+        return redirect(url_for('index'))
+
+    professor = Professor.query.get(id)
+    if professor:
+        try:
+            db.session.delete(professor)
+            db.session.commit()
+            flash(f"Professor(a) {professor.nome} removido(a) com sucesso!", "success")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Erro ao remover professor: {str(e)}", "error")
+    else:
+        flash("Professor não encontrado.", "error")
+
     return redirect(url_for('admin.dashboard'))

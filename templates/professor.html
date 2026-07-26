@@ -12,7 +12,9 @@
     <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
         <div>
             <h2 style="margin: 0; color: #1e293b;">Painel do Professor</h2>
-            <p style="margin-top: 5px; color: #64748b; font-size: 14px;">Gerenciamento de notas, frequências e avisos da turma</p>
+            <p style="margin-top: 5px; color: #64748b; font-size: 14px;">
+                Disciplina Ativa: <strong style="color: #2563eb;">{{ disciplina }}</strong> | Professor: <strong>{{ session.usuario }}</strong>
+            </p>
         </div>
         <div style="display: flex; gap: 10px;">
             <a href="{{ url_for('professor.chamada') }}" class="btn-action" style="background-color: #059669; color: #ffffff; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px;">
@@ -52,7 +54,9 @@
     </div>
 
     <div class="table-container" style="background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-        <h3 style="margin-top: 0; margin-bottom: 20px; color: #1e293b; font-size: 18px;">📝 Lançamento de Notas por Aluno</h3>
+        <h3 style="margin-top: 0; margin-bottom: 20px; color: #1e293b; font-size: 18px;">
+            📝 Lançamento de Notas - <span style="color: #2563eb;">{{ disciplina }}</span>
+        </h3>
 
         <div style="overflow-x: auto;">
             <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
@@ -64,8 +68,6 @@
                         <th scope="col" style="padding: 12px; border-bottom: 2px solid #e2e8f0; color: #475569; text-align: center;">2º Bim</th>
                         <th scope="col" style="padding: 12px; border-bottom: 2px solid #e2e8f0; color: #475569; text-align: center;">3º Bim</th>
                         <th scope="col" style="padding: 12px; border-bottom: 2px solid #e2e8f0; color: #475569; text-align: center;">4º Bim</th>
-                        <th scope="col" style="padding: 12px; border-bottom: 2px solid #e2e8f0; color: #475569; text-align: center;">Média</th>
-                        <th scope="col" style="padding: 12px; border-bottom: 2px solid #e2e8f0; color: #475569; text-align: center;">Situação</th>
                         <th scope="col" style="padding: 12px; border-bottom: 2px solid #e2e8f0; color: #475569; text-align: center;">Ação</th>
                     </tr>
                 </thead>
@@ -74,7 +76,7 @@
                     <tr>
                         <form action="{{ url_for('professor.lancar_notas') }}" method="POST">
                             <input type="hidden" name="matricula" value="{{ aluno.matricula }}">
-                            
+
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
                                 <code>{{ aluno.matricula }}</code>
                             </td>
@@ -82,40 +84,28 @@
                                 {{ aluno.nome }}
                             </td>
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-                                <input type="number" step="0.1" min="0" max="10" name="b1" value="{{ aluno.b1 if aluno.b1 is not none else '' }}" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="number" step="0.1" min="0" max="10" name="b1" placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
                             </td>
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-                                <input type="number" step="0.1" min="0" max="10" name="b2" value="{{ aluno.b2 if aluno.b2 is not none else '' }}" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="number" step="0.1" min="0" max="10" name="b2" placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
                             </td>
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-                                <input type="number" step="0.1" min="0" max="10" name="b3" value="{{ aluno.b3 if aluno.b3 is not none else '' }}" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="number" step="0.1" min="0" max="10" name="b3" placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
                             </td>
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-                                <input type="number" step="0.1" min="0" max="10" name="b4" value="{{ aluno.b4 if aluno.b4 is not none else '' }}" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
-                            </td>
-                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 700; color: #0f172a;">
-                                {{ aluno.media if aluno.media is not none else '-' }}
+                                <input type="number" step="0.1" min="0" max="10" name="b4" placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
                             </td>
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-                                {% if aluno.situacao == 'Aprovado' %}
-                                    <span style="background-color: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">Aprovado</span>
-                                {% elif aluno.situacao == 'Recuperação' %}
-                                    <span style="background-color: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">Recuperação</span>
-                                {% else %}
-                                    <span style="background-color: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">Reprovado</span>
-                                {% endif %}
-                            </td>
-                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-                                <button type="submit" style="background-color: #2563eb; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
-                                    Salvar
+                                <button type="submit" style="background-color: #2563eb; color: #ffffff; border: none; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s;">
+                                    Salvar Nota
                                 </button>
                             </td>
                         </form>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="9" style="padding: 20px; text-align: center; color: #64748b; font-style: italic;">
-                            Nenhum aluno cadastrado na base de dados.
+                        <td colspan="7" style="padding: 20px; text-align: center; color: #64748b; font-style: italic;">
+                            Nenhum aluno cadastrado no sistema.
                         </td>
                     </tr>
                     {% endfor %}

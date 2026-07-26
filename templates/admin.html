@@ -50,12 +50,99 @@
         </form>
     </div>
 
-    <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-        <h3 style="color: var(--primary-color); margin: 0;">📋 Prontuários Ativos</h3>
-        <input type="text" id="inputBusca" placeholder="🔍 Buscar por nome ou matrícula..." style="padding: 10px 15px; width: 100%; max-width: 320px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
+    <div style="margin-top: 40px;">
+        <h3 style="color: #1e3a8a; margin-bottom: 15px;">👨‍🏫 Corpo Docente / Professores Cadastrados</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr style="background-color: #1e3a8a; color: white;">
+                        <th>ID</th>
+                        <th>Nome do Professor</th>
+                        <th>Usuário de Acesso</th>
+                        <th style="text-align: center;">Disciplina Responsável</th>
+                        <th style="text-align: center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prof in professores %}
+                    <tr>
+                        <td><code>#{{ prof.id }}</code></td>
+                        <td style="font-weight: 600;">{{ prof.nome }}</td>
+                        <td><code>{{ prof.usuario }}</code></td>
+                        <td style="text-align: center;">
+                            <span style="background: #dbeafe; color: #1e40af; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 13px;">
+                                {{ prof.disciplina }}
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <a href="{{ url_for('admin.deletar_professor', id=prof.id) }}"
+                               class="btn-delete"
+                               onclick="return confirm('Deseja realmente remover o(a) professor(a) {{ prof.nome }}?')"
+                               style="padding: 4px 8px; font-size: 13px; background-color: #dc2626; color: white; border-radius: 4px; text-decoration: none;">
+                               Remover
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #64748b; padding: 20px;">Nenhum professor cadastrado no momento.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="table-responsive">
+    <div style="margin-top: 40px;">
+        <h3 style="color: #1e3a8a; margin-bottom: 15px;">📊 Acompanhamento de Notas Lançadas por Disciplina</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr style="background-color: #0f172a; color: white;">
+                        <th>Matrícula Aluno</th>
+                        <th>Disciplina</th>
+                        <th style="text-align: center;">1º Bim</th>
+                        <th style="text-align: center;">2º Bim</th>
+                        <th style="text-align: center;">3º Bim</th>
+                        <th style="text-align: center;">4º Bim</th>
+                        <th style="text-align: center;">Média</th>
+                        <th style="text-align: center;">Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in todas_notas %}
+                    <tr>
+                        <td><code>{{ item.matricula_aluno }}</code></td>
+                        <td style="font-weight: 600; color: #2563eb;">{{ item.disciplina }}</td>
+                        <td style="text-align: center; color: #475569;">{{ item.b1 if item.b1 is not none else '-' }}</td>
+                        <td style="text-align: center; color: #475569;">{{ item.b2 if item.b2 is not none else '-' }}</td>
+                        <td style="text-align: center; color: #475569;">{{ item.b3 if item.b3 is not none else '-' }}</td>
+                        <td style="text-align: center; color: #475569;">{{ item.b4 if item.b4 is not none else '-' }}</td>
+                        <td style="text-align: center; font-weight: bold; color: #0f172a;">{{ item.media }}</td>
+                        <td style="text-align: center;">
+                            {% if item.situacao == 'Aprovado' %}
+                                <span style="background: #dcfce7; color: #16a34a; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 12px;">Aprovado</span>
+                            {% else %}
+                                <span style="background: #fee2e2; color: #dc2626; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 12px;">Recuperação</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: #64748b; padding: 20px;">Nenhuma nota individual cadastrada por professores até o momento.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <h3 style="color: #1e3a8a; margin: 0;">📋 Prontuários Ativos de Alunos (Notas Gerais)</h3>
+        <input type="text" id="inputBusca" placeholder="🔍 Buscar aluno por nome ou matrícula..." style="padding: 10px 15px; width: 100%; max-width: 320px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
+    </div>
+
+    <div class="table-responsive" style="margin-top: 15px;">
         <table id="tabelaAlunos">
             <thead>
                 <tr>
@@ -80,10 +167,10 @@
                     </td>
                     <td><code class="aluno-matricula">{{ aluno.matricula }}</code></td>
                     <td>{{ aluno.curso }}</td>
-                    <td style="text-align: center; color: #64748b;">{{ aluno.b1 }}</td>
-                    <td style="text-align: center; color: #64748b;">{{ aluno.b2 }}</td>
-                    <td style="text-align: center; color: #64748b;">{{ aluno.b3 }}</td>
-                    <td style="text-align: center; color: #64748b;">{{ aluno.b4 }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b1 if aluno.b1 is not none else '-' }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b2 if aluno.b2 is not none else '-' }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b3 if aluno.b3 is not none else '-' }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b4 if aluno.b4 is not none else '-' }}</td>
                     <td style="text-align: center; font-weight: bold;">{{ aluno.media }}</td>
                     <td style="text-align: center;">
                         {% if aluno.situacao == 'Aprovado' %}
@@ -116,10 +203,10 @@
             </tbody>
         </table>
     </div>
+
 </div>
 
 <script>
-    // Função do Filtro de Busca Dinâmico
     document.getElementById('inputBusca').addEventListener('keyup', function() {
         let filtro = this.value.toLowerCase();
         let linhas = document.querySelectorAll('#tabelaAlunos tbody tr');
@@ -141,39 +228,8 @@
         });
     });
 
-    // Função do Botão de Alerta (Aviãozinho)
     function enviarAlerta(nome, email) {
         alert(`📬 Alerta de notas enviado com sucesso!\n\nDestinatário: ${nome}\nE-mail: ${email}`);
-
     }
-
-    <div class="card-admin">
-    <h3>📋 Usuários / Alunos Cadastrados no Sistema</h3>
-
-    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-        <thead>
-            <tr style="background-color: #f8fafc; text-align: left;">
-                <th style="padding: 10px; border-bottom: 2px solid #e2e8f0;">Matrícula / Usuário</th>
-                <th style="padding: 10px; border-bottom: 2px solid #e2e8f0;">Nome</th>
-                <th style="padding: 10px; border-bottom: 2px solid #e2e8f0;">Curso</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for aluno in alunos %}
-            <tr style="border-bottom: 1px solid #e2e8f0;">
-                <td style="padding: 10px;"><code>{{ aluno.matricula }}</code></td>
-                <td style="padding: 10px; font-weight: 600;">{{ aluno.nome }}</td>
-                <td style="padding: 10px;">{{ aluno.curso }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="3" style="padding: 15px; text-align: center; color: #64748b;">
-                    Nenhum aluno cadastrado no momento.
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
 </script>
 {% endblock %}

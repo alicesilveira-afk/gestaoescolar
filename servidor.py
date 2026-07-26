@@ -5,11 +5,15 @@ from blueprints.bp_admin import bp_admin
 from blueprints.bp_aluno import bp_aluno
 from blueprints.bp_professor import bp_professor
 
+
 from modelos.aluno import Aluno
+from modelos.professor import Professor
+
+
 from dao.aluno_dao import AlunoDAO
+from dao.professor_dao import ProfessorDAO
 
 app = Flask(__name__)
-
 app.secret_key = 'KJ#H4k3jh412dasd'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gestao_escolar.db'
@@ -40,14 +44,19 @@ def logar():
         session['perfil'] = 'Admin'
         return redirect(url_for('admin.dashboard'))
 
-    elif login_input.lower() == 'professor' and senha_input == '123':
-        session['usuario'] = "Professor"
+    prof_dao = ProfessorDAO()
+    professor = prof_dao.buscar_por_usuario(login_input)
+
+    if professor and professor.senha == senha_input:
+        session['usuario'] = professor.usuario
+        session['nome'] = professor.nome
         session['perfil'] = 'Professor'
+        session['disciplina'] = professor.disciplina
         return redirect(url_for('professor.dashboard'))
 
-    aluno = Aluno.query.filter(
-        (Aluno.matricula == login_input) | (Aluno.nome == login_input)
-    ).first()
+
+    aluno_dao = AlunoDAO()
+    aluno = aluno_dao.buscar_por_matricula(login_input)
 
     if aluno and (aluno.senha == senha_input or senha_input == '123'):
         session['usuario'] = aluno.nome
@@ -56,6 +65,7 @@ def logar():
         return redirect(url_for('aluno.dashboard'))
 
     return render_template('login.html', erro="Usuário ou senha incorretos.")
+
 
 @app.route('/cadastrar', methods=['GET', 'POST'])
 def cadastrar():
@@ -69,18 +79,15 @@ def cadastrar():
 
         if perfil == 'Aluno':
             dao = AlunoDAO()
-
             novo_aluno = Aluno(
                 nome=usuario,
                 matricula=usuario,
                 senha=senha,
                 curso='Técnico em Informática'
             )
-
             sucesso, mensagem = dao.salvar(novo_aluno)
 
             if sucesso:
-
                 session['usuario'] = novo_aluno.nome
                 session['matricula'] = novo_aluno.matricula
                 session['perfil'] = 'Aluno'
@@ -88,12 +95,30 @@ def cadastrar():
             else:
                 return render_template('cadastrar.html', erro=mensagem)
 
-
         elif perfil == 'Professor':
+            disciplina = request.form.get('disciplina', '').strip()
 
-            session['usuario'] = usuario
-            session['perfil'] = 'Professor'
-            return redirect(url_for('professor.dashboard'))
+            if not disciplina:
+                return render_template('cadastrar.html', erro="Informe a disciplina do professor!")
+
+            dao = ProfessorDAO()
+
+            novo_prof = Professor(
+                nome=usuario,
+                usuario=usuario,
+                senha=senha,
+                disciplina=disciplina
+            )
+            sucesso, mensagem = dao.salvar(novo_prof)
+
+            if sucesso:
+                session['usuario'] = novo_prof.usuario
+                session['nome'] = novo_prof.nome
+                session['perfil'] = 'Professor'
+                session['disciplina'] = disciplina  
+                return redirect(url_for('professor.dashboard'))
+            else:
+                return render_template('cadastrar.html', erro=mensagem)
 
     return render_template('cadastrar.html')
 

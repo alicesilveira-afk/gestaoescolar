@@ -9,7 +9,6 @@ def cadastrar_usuario():
         usuario = request.form.get('usuario')
         senha = request.form.get('senha')
 
-        # Lógica de gravação aqui...
 
         return redirect(url_for('index')) # ou url_for('auth.index')
 

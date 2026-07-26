@@ -8,78 +8,76 @@
 {% endblock %}
 
 {% block content %}
-<div class="aluno-panel" style="max-width: 850px; margin: 0 auto;">
+<div class="aluno-panel" style="max-width: 900px; margin: 0 auto; padding-bottom: 40px;">
 
-    <div class="aluno-header-box">
-        <h2 style="margin-bottom: 5px;">📄 Boletim Escolar</h2>
-        <p style="opacity: 0.9; font-size: 14px;">Dados oficiais extraídos do banco de dados institucional</p>
+    <div class="aluno-header-box" style="background: #1e3a8a; color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+        <h2 style="margin-bottom: 5px; font-size: 24px;">📄 Boletim Escolar por Disciplina</h2>
+        <p style="opacity: 0.9; font-size: 14px; margin: 0;">Dados oficiais extraídos do banco de dados institucional</p>
     </div>
 
     <div style="margin-bottom: 25px; display: flex; justify-content: flex-end;">
-        <a href="{{ url_for('professor.ver_avisos') }}" class="btn-avisos" style="background-color: #2563eb; color: #ffffff; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); transition: all 0.2s ease-in-out;">
+        <a href="{{ url_for('professor.ver_avisos') }}" class="btn-avisos" style="background-color: #2563eb; color: #ffffff; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); transition: all 0.2s ease-in-out;">
             📌 Ver Quadro de Avisos
         </a>
     </div>
 
     {% if aluno %}
-    <div class="aluno-card">
+    <div class="aluno-card" style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
 
-        <div class="info-grid">
-            <div class="info-item"><strong style="color: var(--text-muted);">Nome do Aluno:</strong> <span>{{ aluno.nome }}</span></div>
-            <div class="info-item"><strong style="color: var(--text-muted);">Matrícula:</strong> <span><code>{{ aluno.matricula }}</code></span></div>
-            <div class="info-item"><strong style="color: var(--text-muted);">Curso Cadastrado:</strong> <span>{{ aluno.curso }}</span></div>
-            <div class="info-item"><strong style="color: var(--text-muted);">Data de Entrada:</strong> <span>{{ aluno.data }}</span></div>
+        <div class="info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
+            <div class="info-item"><strong style="color: #64748b; font-size: 13px;">NOME DO ALUNO:</strong> <br><span style="font-weight: 600; color: #1e293b;">{{ aluno.nome }}</span></div>
+            <div class="info-item"><strong style="color: #64748b; font-size: 13px;">MATRÍCULA:</strong> <br><code>{{ aluno.matricula }}</code></div>
+            <div class="info-item"><strong style="color: #64748b; font-size: 13px;">CURSO CADASTRADO:</strong> <br><span style="font-weight: 600; color: #1e293b;">{{ aluno.curso }}</span></div>
+            <div class="info-item"><strong style="color: #64748b; font-size: 13px;">ANO/PERÍODO:</strong> <br><span style="font-weight: 600; color: #1e293b;">{{ aluno.data }}</span></div>
         </div>
 
-        <div class="grades-display" style="display: grid; grid-template-columns: repeat(4, 1fr) 1.2fr; gap: 12px; margin-top: 20px;">
-            <div class="grade-box">
-                <label>1º Bimestre</label>
-                <h4>{{ aluno.b1 if aluno.b1 is not none and aluno.b1 != '' else '-' }}</h4>
-            </div>
-            <div class="grade-box">
-                <label>2º Bimestre</label>
-                <h4>{{ aluno.b2 if aluno.b2 is not none and aluno.b2 != '' else '-' }}</h4>
-            </div>
-            <div class="grade-box">
-                <label>3º Bimestre</label>
-                <h4>{{ aluno.b3 if aluno.b3 is not none and aluno.b3 != '' else '-' }}</h4>
-            </div>
-            <div class="grade-box">
-                <label>4º Bimestre</label>
-                <h4>{{ aluno.b4 if aluno.b4 is not none and aluno.b4 != '' else '-' }}</h4>
-            </div>
-            <div class="grade-box highlight">
-                <label>Média Final</label>
-                <h4>{{ aluno.media }}</h4>
-            </div>
-        </div>
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;">
 
-        <div class="status-footer" style="margin-top: 25px;">
-            <div>
-                <span style="font-size: 14px; color: var(--text-muted); font-weight: 500;">Situação Acadêmica Atual:</span>
-                <div style="margin-top: 5px;">
-                    {% if aluno.situacao == 'Aprovado' %}
-                        <span class="badge badge-success" style="font-size: 14px; padding: 6px 16px;">✓ Aprovado</span>
-                    {% elif aluno.situacao == 'Recuperação' %}
-                        <span class="badge badge-warning" style="font-size: 14px; padding: 6px 16px;">⚠️ Em Recuperação</span>
-                    {% elif aluno.situacao == 'Reprovado por Falta' %}
-                        <span class="badge badge-danger" style="font-size: 14px; padding: 6px 16px;">❌ Reprovado por Falta</span>
+        <h3 style="color: #1e3a8a; font-size: 18px; margin-bottom: 15px;">📚 Desempenho por Disciplina</h3>
+
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; margin-bottom: 25px;">
+                <thead>
+                    <tr style="background-color: #1e3a8a; color: white;">
+                        <th style="padding: 12px; border-radius: 6px 0 0 0;">Disciplina</th>
+                        <th style="padding: 12px; text-align: center;">1º Bim</th>
+                        <th style="padding: 12px; text-align: center;">2º Bim</th>
+                        <th style="padding: 12px; text-align: center;">3º Bim</th>
+                        <th style="padding: 12px; text-align: center;">4º Bim</th>
+                        <th style="padding: 12px; text-align: center;">Média</th>
+                        <th style="padding: 12px; text-align: center; border-radius: 0 6px 0 0;">Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in notas_disciplinas %}
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 12px; font-weight: 600; color: #0f172a;">{{ item.disciplina }}</td>
+                        <td style="padding: 12px; text-align: center; color: #475569;">{{ item.b1 if item.b1 is not none else '-' }}</td>
+                        <td style="padding: 12px; text-align: center; color: #475569;">{{ item.b2 if item.b2 is not none else '-' }}</td>
+                        <td style="padding: 12px; text-align: center; color: #475569;">{{ item.b3 if item.b3 is not none else '-' }}</td>
+                        <td style="padding: 12px; text-align: center; color: #475569;">{{ item.b4 if item.b4 is not none else '-' }}</td>
+                        <td style="padding: 12px; text-align: center; font-weight: bold; color: #1e3a8a;">{{ item.media }}</td>
+                        <td style="padding: 12px; text-align: center;">
+                            {% if item.situacao == 'Aprovado' %}
+                                <span style="background: #dcfce7; color: #16a34a; padding: 4px 12px; border-radius: 12px; font-weight: 600; font-size: 12px;">Aprovado</span>
+                            {% else %}
+                                <span style="background: #fee2e2; color: #dc2626; padding: 4px 12px; border-radius: 12px; font-weight: 600; font-size: 12px;">Recuperação</span>
+                            {% endif %}
+                        </td>
+                    </tr>
                     {% else %}
-                        <span class="badge badge-danger" style="font-size: 14px; padding: 6px 16px;">❌ Reprovado por Nota</span>
-                    {% endif %}
-                </div>
-            </div>
-
-            {% if aluno.situacao == 'Recuperação' %}
-            <div class="recuperacao-alert">
-                <span style="font-size: 12px; color: #b45309; font-weight: 600;">Exigência para Exame Final:</span>
-                <h4 style="color: #92400e; font-size: 16px; margin-top: 2px;">Nota mínima necessária: {{ aluno.nota_necessaria_final }}</h4>
-            </div>
-            {% endif %}
+                    <tr>
+                        <td colspan="7" style="padding: 20px; text-align: center; color: #64748b; font-style: italic;">
+                            Nenhuma nota cadastrada por disciplina até o momento.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
 
         <div style="margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;">
-            <h3 style="color: #1e3a8a; font-size: 16px; margin-top: 0; margin-bottom: 15px;">📊 Evolução do Desempenho Escolar</h3>
+            <h3 style="color: #1e3a8a; font-size: 16px; margin-top: 0; margin-bottom: 15px;">📊 Média por Disciplina</h3>
             <div style="position: relative; height: 250px; width: 100%;">
                 <canvas id="graficoNotas"></canvas>
             </div>
@@ -87,14 +85,14 @@
 
     </div>
 
-    <div class="frequencia-panel" style="margin-top: 30px;">
-        <h3>📅 Histórico de Frequência</h3>
+    <div class="frequencia-panel" style="margin-top: 30px; background: white; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <h3 style="color: #1e3a8a; font-size: 18px; margin-top: 0; margin-bottom: 15px;">📅 Histórico de Frequência</h3>
 
-        <div class="cards-contador">
-            <div class="card-resumo presencas">
+        <div class="cards-contador" style="display: flex; gap: 15px; margin-bottom: 20px;">
+            <div class="card-resumo presencas" style="background: #dcfce7; color: #15803d; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px;">
                 Presenças: {{ total_presencas }}
             </div>
-            <div class="card-resumo faltas">
+            <div class="card-resumo faltas" style="background: #fee2e2; color: #b91c1c; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px;">
                 Faltas: {{ total_faltas }}
             </div>
         </div>
@@ -111,13 +109,13 @@
                     {% for presenca in presencas %}
                     <tr>
                         <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; color: #334155;">
-                            {{ presenca.data.strftime('%d/%m/%Y') }}
+                            {{ presenca.data.strftime('%d/%m/%Y') if presenca.data.strftime else presenca.data }}
                         </td>
                         <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
                             {% if presenca.status == 'Presente' %}
-                                <span class="badge-frequencia compareceu">Presente</span>
+                                <span style="background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 10px; font-weight: 600; font-size: 12px;">Presente</span>
                             {% else %}
-                                <span class="badge-frequencia falta">Falta</span>
+                                <span style="background: #fee2e2; color: #b91c1c; padding: 4px 10px; border-radius: 10px; font-weight: 600; font-size: 12px;">Falta</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -134,8 +132,8 @@
     </div>
 
     {% else %}
-    <div class="aluno-card" style="text-align: center; color: var(--text-muted); padding: 40px;">
-        ⚠️ Suas credenciais de matrícula provisória não foram localizadas na base de dados ativa pelo Administrador.
+    <div class="aluno-card" style="text-align: center; color: #64748b; padding: 40px; background: white; border-radius: 12px;">
+        ⚠️ Suas credenciais de matrícula não foram localizadas na base de dados ativa pelo Administrador.
     </div>
     {% endif %}
 
@@ -146,28 +144,28 @@
         const ctx = document.getElementById('graficoNotas');
         if (!ctx) return;
 
-        const b1 = {{ aluno.b1 if aluno.b1 is not none and aluno.b1 != '' else 'null' }};
-        const b2 = {{ aluno.b2 if aluno.b2 is not none and aluno.b2 != '' else 'null' }};
-        const b3 = {{ aluno.b3 if aluno.b3 is not none and aluno.b3 != '' else 'null' }};
-        const b4 = {{ aluno.b4 if aluno.b4 is not none and aluno.b4 != '' else 'null' }};
+        // Extrai as disciplinas e médias vindas do Flask
+        const disciplinas = [
+            {% for item in notas_disciplinas %}
+                "{{ item.disciplina }}",
+            {% endfor %}
+        ];
+
+        const medias = [
+            {% for item in notas_disciplinas %}
+                {{ item.media }},
+            {% endfor %}
+        ];
 
         new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
-                labels: ['1º Bimestre', '2º Bimestre', '3º Bimestre', '4º Bimestre'],
+                labels: disciplinas.length > 0 ? disciplinas : ['Sem Disciplinas'],
                 datasets: [{
-                    label: 'Sua Nota',
-                    data: [b1, b2, b3, b4],
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                    borderWidth: 3,
-                    pointBackgroundColor: '#1e3a8a',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                    fill: true,
-                    tension: 0.3
+                    label: 'Média Final',
+                    data: medias.length > 0 ? medias : [0],
+                    backgroundColor: '#2563eb',
+                    borderRadius: 6
                 }]
             },
             options: {

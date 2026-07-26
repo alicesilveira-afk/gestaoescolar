@@ -20,7 +20,6 @@ class AlunoDAO:
         return Aluno.query.order_by(Aluno.nome).all()
 
     def buscar_por_matricula(self, matricula):
-        # Converte para string para garantir compatibilidade se o formulário enviar int ou str
         return Aluno.query.filter_by(matricula=str(matricula).strip()).first()
 
     def atualizar_notas(self, matricula, b1, b2, b3, b4):

@@ -12,6 +12,12 @@
             Preencha os dados abaixo para criar sua conta
         </p>
 
+        {% if erro %}
+            <div style="background-color: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 13px;">
+                {{ erro }}
+            </div>
+        {% endif %}
+
         <form action="{{ url_for('cadastrar') }}" method="POST">
 
             <div style="margin-bottom: 15px;">
@@ -24,11 +30,27 @@
                 <input type="password" name="senha" required placeholder="Digite uma senha forte" style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #f8fafc; font-size: 14px; box-sizing: border-box;">
             </div>
 
-            <div style="margin-bottom: 25px;">
+            <div style="margin-bottom: 15px;">
                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px;">TIPO DE CONTA</label>
-                <select name="perfil" style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #f8fafc; font-size: 14px; box-sizing: border-box;">
+                <select name="perfil" id="perfil" onchange="toggleDisciplina(this.value)" style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #f8fafc; font-size: 14px; box-sizing: border-box;">
                     <option value="Aluno">Aluno</option>
                     <option value="Professor">Professor</option>
+                </select>
+            </div>
+
+            <div id="grupo-disciplina" style="display: none; margin-bottom: 25px;">
+                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px;">DISCIPLINA / MATÉRIA</label>
+                <select name="disciplina" id="disciplina" style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #f8fafc; font-size: 14px; box-sizing: border-box;">
+                    <option value="Matemática">Matemática</option>
+                    <option value="Português">Português</option>
+                    <option value="História">História</option>
+                    <option value="Geografia">Geografia</option>
+                    <option value="Física">Física</option>
+                    <option value="Química">Química</option>
+                    <option value="Biologia">Biologia</option>
+                    <option value="Inglês">Inglês</option>
+                    <option value="Filosofia">Filosofia</option>
+                    <option value="Informática">Informática</option>
                 </select>
             </div>
 
@@ -48,4 +70,15 @@
     </div>
 
 </div>
+
+<script>
+function toggleDisciplina(perfil) {
+    const campoDisciplina = document.getElementById('grupo-disciplina');
+    if (perfil === 'Professor') {
+        campoDisciplina.style.display = 'block';
+    } else {
+        campoDisciplina.style.display = 'none';
+    }
+}
+</script>
 {% endblock %}
