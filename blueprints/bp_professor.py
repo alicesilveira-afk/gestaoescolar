@@ -12,9 +12,9 @@ prof_dao = ProfessorDAO()
 
 avisos_db = [
     {
-        "autor": "Prof. Carlos (Informática)",
-        "mensagem": "Lembrete: Entrega do trabalho de informática até sexta-feira!",
-        "data": "22/07/2026"
+        "autor": "Prof. Rene Gadelha (Informática)",
+        "mensagem": "Lembrete: Entrega do trabalho de informática até quarta-feira!",
+        "data": "05/07/2026"
     }
 ]
 
