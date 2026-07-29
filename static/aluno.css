@@ -36,9 +36,6 @@
     margin-top: 2px;
 }
 
-/* ==========================================================================
-   AJUSTADO: Grade alterada de 3 para 5 colunas (B1, B2, B3, B4 e Média)
-   ========================================================================== */
 .grades-display {
     display: grid;
     grid-template-columns: repeat(4, 1fr) 1.2fr;
@@ -79,7 +76,6 @@
     font-weight: 800;
 }
 
-/* Painel de rodapé da situação */
 .status-footer {
     display: flex;
     justify-content: space-between;
@@ -106,7 +102,6 @@
     border: 1px solid #e2e8f0;
 }
 
-/* Título da seção */
 .frequencia-panel h3 {
     color: #1e3a8a;
     font-size: 20px;
@@ -115,7 +110,6 @@
     margin-bottom: 20px;
 }
 
-/* Container dos Cards de Contador */
 .cards-contador {
     display: flex;
     gap: 15px;

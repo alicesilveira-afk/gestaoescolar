@@ -91,9 +91,6 @@
     color: white;
 }
 
-/* ==========================================================================
-   ACRESCENTADO: Alinhamento das notas de acompanhamento na tabela do Admin
-   ========================================================================== */
 #tabelaAlunos th {
     text-align: center;
     background-color: #f1f5f9;
@@ -115,11 +112,6 @@
     border: 1px solid #e2e8f0;
 }
 
-/* ==========================================
-   PAINEL ADMIN & TABELAS
-   ========================================== */
-
-/* Container Principal do Card Admin */
 .card-admin {
     background-color: #ffffff;
     border-radius: 12px;
@@ -131,7 +123,6 @@
     font-family: 'Inter', -apple-system, sans-serif;
 }
 
-/* Título do Card */
 .card-admin h3 {
     margin-top: 0;
     margin-bottom: 20px;
@@ -143,7 +134,6 @@
     gap: 8px;
 }
 
-/* Tabela de Usuários */
 .card-admin table {
     width: 100%;
     border-collapse: collapse;
@@ -151,7 +141,6 @@
     font-size: 14px;
 }
 
-/* Cabeçalho da Tabela */
 .card-admin thead tr {
     background-color: #f8fafc;
     text-align: left;
@@ -167,7 +156,6 @@
     letter-spacing: 0.5px;
 }
 
-/* Linhas do Corpo da Tabela */
 .card-admin td {
     padding: 12px 14px;
     border-bottom: 1px solid #e2e8f0;
@@ -175,13 +163,11 @@
     vertical-align: middle;
 }
 
-/* Efeito Hover nas Linhas */
 .card-admin tbody tr:hover {
     background-color: #f1f5f9;
     transition: background-color 0.15s ease-in-out;
 }
 
-/* Estilo do Código/Matrícula */
 .card-admin code {
     background-color: #e2e8f0;
     color: #0f172a;
@@ -192,7 +178,6 @@
     font-weight: 600;
 }
 
-/* Mensagem quando não há registros */
 .card-admin .no-data {
     padding: 20px;
     text-align: center;
@@ -200,7 +185,6 @@
     font-style: italic;
 }
 
-/* Responsividade para telas menores */
 @media (max-width: 600px) {
     .card-admin {
         padding: 15px;

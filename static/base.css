@@ -1,13 +1,13 @@
 :root {
-    --primary-color: #1e3a8a;       /* Azul Escuro IFPB */
-    --secondary-color: #3b82f6;     /* Azul Destaque */
-    --bg-light: #f8fafc;            /* Fundo da tela */
-    --surface: #ffffff;             /* Fundo dos cartões e tabelas */
-    --text-main: #1e293b;           /* Texto principal */
-    --text-muted: #64748b;          /* Texto secundário */
-    --success: #10b981;             /* Verde aprovação */
-    --warning: #f59e0b;             /* Amarelo recuperação */
-    --danger: #ef4444;              /* Vermelho reprovação */
+    --primary-color: #1e3a8a;
+    --secondary-color: #3b82f6;
+    --bg-light: #f8fafc;
+    --surface: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
     --border: #e2e8f0;
 }
 
@@ -26,7 +26,6 @@ body {
     flex-direction: column;
 }
 
-/* Navbar principal padrão */
 .navbar {
     background-color: var(--primary-color);
     color: white;
@@ -83,7 +82,6 @@ body {
     flex: 1;
 }
 
-/* Estilo Base de Tabelas para Admin e Professor */
 .table-responsive {
     background: var(--surface);
     border-radius: 8px;

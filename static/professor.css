@@ -1,6 +1,3 @@
-/* ==========================================================================
-   PAINEL DO PROFESSOR (EduTech)
-   ========================================================================== */
 
 .professor-panel h3 {
     color: #1e3a8a;
@@ -14,12 +11,9 @@
     margin-bottom: 25px;
 }
 
-/* ==========================================================================
-   INPUTS DE NOTA (B1, B2, B3, B4)
-   ========================================================================== */
 
 .input-nota {
-    width: 65px; /* Reduzido levemente para caber os 4 bimestres lado a lado sem apertar a tabela */
+    width: 65px;
     padding: 6px 10px;
     border: 1px solid #cbd5e1;
     border-radius: 4px;
@@ -35,7 +29,6 @@
     background-color: #ffffff;
 }
 
-/* Remove as setinhas padrão de número do navegador nos campos de nota */
 .input-nota::-webkit-outer-spin-button,
 .input-nota::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -46,11 +39,7 @@
     -moz-appearance: textfield;
 }
 
-/* ==========================================================================
-   BOTÕES DE AÇÃO E NAVEGAÇÃO
-   ========================================================================== */
 
-/* Botão de Salvar Nota na Tabela */
 .btn-save {
     background-color: #3b82f6;
     color: white;
@@ -67,7 +56,6 @@
     background-color: #2563eb;
 }
 
-/* Botão de Realizar Chamada (Verde Esmeralda) */
 .btn-chamada {
     display: inline-block;
     background-color: #10b981;
@@ -90,7 +78,6 @@
     transform: translateY(0);
 }
 
-/* Botão do Quadro de Avisos (Azul) */
 .btn-avisos {
     display: inline-block;
     background-color: #2563eb;

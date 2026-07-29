@@ -83,18 +83,31 @@
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #1e293b;">
                                 {{ aluno.nome }}
                             </td>
+
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-                                <input type="number" step="0.1" min="0" max="10" name="b1" placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="number" step="0.1" min="0" max="10" name="b1"
+                                       value="{{ aluno.b1_disc if aluno.b1_disc is not none else '' }}"
+                                       placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
                             </td>
+
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-                                <input type="number" step="0.1" min="0" max="10" name="b2" placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="number" step="0.1" min="0" max="10" name="b2"
+                                       value="{{ aluno.b2_disc if aluno.b2_disc is not none else '' }}"
+                                       placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
                             </td>
+
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-                                <input type="number" step="0.1" min="0" max="10" name="b3" placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="number" step="0.1" min="0" max="10" name="b3"
+                                       value="{{ aluno.b3_disc if aluno.b3_disc is not none else '' }}"
+                                       placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
                             </td>
+
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
-                                <input type="number" step="0.1" min="0" max="10" name="b4" placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                                <input type="number" step="0.1" min="0" max="10" name="b4"
+                                       value="{{ aluno.b4_disc if aluno.b4_disc is not none else '' }}"
+                                       placeholder="0.0" style="width: 55px; text-align: center; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px;">
                             </td>
+
                             <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">
                                 <button type="submit" style="background-color: #2563eb; color: #ffffff; border: none; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s;">
                                     Salvar Nota

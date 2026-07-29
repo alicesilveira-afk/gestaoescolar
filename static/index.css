@@ -97,17 +97,12 @@ body {
     background-color: #172554;
 }
 
-/* ==========================================================================
-   ADICIONADO: ESTILOS COMPLEMENTARES PARA A TELA DE CADASTRO
-   ========================================================================== */
-
-/* Reaproveita o container de login para o cadastro de forma consistente */
 .container {
     background: #ffffff;
     padding: 40px 35px;
     border-radius: 12px;
     width: 100%;
-    max-width: 480px; /* Um pouco mais largo para acomodar a linha de notas */
+    max-width: 480px;
     box-shadow: 0 10px 25px rgba(160, 175, 195, 0.25);
     border: 1px solid rgba(226, 232, 240, 0.8);
 }
@@ -120,7 +115,6 @@ body {
     margin-bottom: 30px;
 }
 
-/* Mapeia a classe .grupo-form para se comportar igual a sua .input-group */
 .grupo-form {
     margin-bottom: 20px;
     display: flex;
@@ -155,7 +149,6 @@ body {
     box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
 }
 
-/* Alinhamento inteligente dos 4 inputs de notas lado a lado */
 .row-notas {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -165,10 +158,9 @@ body {
 
 .row-notas input {
     text-align: center;
-    padding: 12px 8px; /* Reduz o padding lateral para as notas caberem perfeitamente */
+    padding: 12px 8px;
 }
 
-/* Estilo do botão de cadastro idêntico ao seu botão de login */
 button[type="submit"] {
     width: 100%;
     padding: 14px;
@@ -212,7 +204,6 @@ button[type="submit"]:hover {
     text-decoration: underline;
 }
 
-/* Campo de Seleção (Dropdown) */
 .select-field {
     width: 100%;
     padding: 12px;
