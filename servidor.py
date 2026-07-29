@@ -1,14 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from config import db
 
+# Importação dos Blueprints
 from blueprints.bp_admin import bp_admin
 from blueprints.bp_aluno import bp_aluno
 from blueprints.bp_professor import bp_professor
 
-
+# Importação das Models
 from modelos.aluno import Aluno
 from modelos.professor import Professor
-
+from modelos.nota import Nota
 
 from dao.aluno_dao import AlunoDAO
 from dao.professor_dao import ProfessorDAO
@@ -53,7 +54,6 @@ def logar():
         session['perfil'] = 'Professor'
         session['disciplina'] = professor.disciplina
         return redirect(url_for('professor.dashboard'))
-
 
     aluno_dao = AlunoDAO()
     aluno = aluno_dao.buscar_por_matricula(login_input)
@@ -115,7 +115,7 @@ def cadastrar():
                 session['usuario'] = novo_prof.usuario
                 session['nome'] = novo_prof.nome
                 session['perfil'] = 'Professor'
-                session['disciplina'] = disciplina  
+                session['disciplina'] = disciplina
                 return redirect(url_for('professor.dashboard'))
             else:
                 return render_template('cadastrar.html', erro=mensagem)
@@ -133,7 +133,35 @@ def logout():
 def listarusuarios():
     dao = AlunoDAO()
     lista = dao.listar_todos()
-    return render_template('index.html', usuarios=lista)
+
+    todas_notas = Nota.query.all()
+
+    for aluno in lista:
+        notas_aluno = [n for n in todas_notas if str(n.matricula_aluno).strip() == str(aluno.matricula).strip()]
+
+        if notas_aluno:
+            b1_list = [n.b1 for n in notas_aluno if n.b1 is not None]
+            b2_list = [n.b2 for n in notas_aluno if n.b2 is not None]
+            b3_list = [n.b3 for n in notas_aluno if n.b3 is not None]
+            b4_list = [n.b4 for n in notas_aluno if n.b4 is not None]
+
+            aluno.b1 = round(sum(b1_list) / len(b1_list), 1) if b1_list else None
+            aluno.b2 = round(sum(b2_list) / len(b2_list), 1) if b2_list else None
+            aluno.b3 = round(sum(b3_list) / len(b3_list), 1) if b3_list else None
+            aluno.b4 = round(sum(b4_list) / len(b4_list), 1) if b4_list else None
+
+            medias_disc = [n.media for n in notas_aluno if n.media is not None]
+            aluno.media_calc = round(sum(medias_disc) / len(medias_disc), 1) if medias_disc else 0.0
+        else:
+            aluno.b1 = None
+            aluno.b2 = None
+            aluno.b3 = None
+            aluno.b4 = None
+            aluno.media_calc = 0.0
+
+        aluno.situacao_calc = "Aprovado" if aluno.media_calc >= 7.0 else "Recuperação"
+
+    return render_template('index.html', lista=lista)
 
 
 if __name__ == '__main__':

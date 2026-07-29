@@ -13,7 +13,6 @@ prof_dao = ProfessorDAO()
 
 @bp_admin.route('/admin')
 def dashboard():
-    # Proteção da rota do Admin
     if session.get('usuario') != 'Administrador':
         return redirect(url_for('index'))
 
@@ -21,9 +20,40 @@ def dashboard():
     professores = prof_dao.listar_todos()
     todas_notas = Nota.query.all()
 
+    for aluno in alunos:
+        notas_aluno = [n for n in todas_notas if str(n.matricula_aluno).strip() == str(aluno.matricula).strip()]
+
+        if notas_aluno:
+
+            b1_list = [n.b1 for n in notas_aluno if n.b1 is not None]
+            b2_list = [n.b2 for n in notas_aluno if n.b2 is not None]
+            b3_list = [n.b3 for n in notas_aluno if n.b3 is not None]
+            b4_list = [n.b4 for n in notas_aluno if n.b4 is not None]
+
+
+            aluno.b1_geral = round(sum(b1_list) / len(b1_list), 1) if b1_list else None
+            aluno.b2_geral = round(sum(b2_list) / len(b2_list), 1) if b2_list else None
+            aluno.b3_geral = round(sum(b3_list) / len(b3_list), 1) if b3_list else None
+            aluno.b4_geral = round(sum(b4_list) / len(b4_list), 1) if b4_list else None
+
+
+            medias_disciplinas = [n.media for n in notas_aluno if n.media is not None]
+            aluno.media_geral = round(sum(medias_disciplinas) / len(medias_disciplinas), 1) if medias_disciplinas else 0.0
+        else:
+
+            aluno.b1_geral = None
+            aluno.b2_geral = None
+            aluno.b3_geral = None
+            aluno.b4_geral = None
+            aluno.media_geral = 0.0
+
+        # Situação unificada considerando a Média Geral
+        aluno.situacao_geral = "Aprovado" if aluno.media_geral >= 7.0 else "Recuperação"
+
     return render_template(
         'admin.html',
         alunos=alunos,
+        lista=alunos,
         professores=professores,
         todas_notas=todas_notas
     )

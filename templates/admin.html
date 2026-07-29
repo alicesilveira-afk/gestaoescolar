@@ -138,7 +138,7 @@
     </div>
 
     <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-        <h3 style="color: #1e3a8a; margin: 0;">📋 Prontuários Ativos de Alunos (Notas Gerais)</h3>
+        <h3 style="color: #1e3a8a; margin: 0;">📋 Prontuários Ativos de Alunos (Notas Gerais - Todas as Disciplinas)</h3>
         <input type="text" id="inputBusca" placeholder="🔍 Buscar aluno por nome ou matrícula..." style="padding: 10px 15px; width: 100%; max-width: 320px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
     </div>
 
@@ -149,11 +149,11 @@
                     <th>Nome</th>
                     <th>Matrícula</th>
                     <th>Curso</th>
-                    <th style="text-align: center;">B1</th>
-                    <th style="text-align: center;">B2</th>
-                    <th style="text-align: center;">B3</th>
-                    <th style="text-align: center;">B4</th>
-                    <th style="text-align: center;">Média</th>
+                    <th style="text-align: center;">B1 (Geral)</th>
+                    <th style="text-align: center;">B2 (Geral)</th>
+                    <th style="text-align: center;">B3 (Geral)</th>
+                    <th style="text-align: center;">B4 (Geral)</th>
+                    <th style="text-align: center;">Média Geral</th>
                     <th style="text-align: center;">Situação</th>
                     <th style="text-align: center;">Ações</th>
                 </tr>
@@ -167,20 +167,22 @@
                     </td>
                     <td><code class="aluno-matricula">{{ aluno.matricula }}</code></td>
                     <td>{{ aluno.curso }}</td>
-                    <td style="text-align: center; color: #64748b;">{{ aluno.b1 if aluno.b1 is not none else '-' }}</td>
-                    <td style="text-align: center; color: #64748b;">{{ aluno.b2 if aluno.b2 is not none else '-' }}</td>
-                    <td style="text-align: center; color: #64748b;">{{ aluno.b3 if aluno.b3 is not none else '-' }}</td>
-                    <td style="text-align: center; color: #64748b;">{{ aluno.b4 if aluno.b4 is not none else '-' }}</td>
-                    <td style="text-align: center; font-weight: bold;">{{ aluno.media }}</td>
+
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b1_geral if aluno.b1_geral is not none else '-' }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b2_geral if aluno.b2_geral is not none else '-' }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b3_geral if aluno.b3_geral is not none else '-' }}</td>
+                    <td style="text-align: center; color: #64748b;">{{ aluno.b4_geral if aluno.b4_geral is not none else '-' }}</td>
+
+                    <td style="text-align: center; font-weight: bold; color: #1e3a8a;">{{ aluno.media_geral }}</td>
+
                     <td style="text-align: center;">
-                        {% if aluno.situacao == 'Aprovado' %}
+                        {% if aluno.situacao_geral == 'Aprovado' %}
                             <span style="background: #dcfce7; color: #16a34a; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 13px;">Aprovado</span>
-                        {% elif aluno.situacao == 'Reprovado por Falta' %}
-                            <span style="background: #fef3c7; color: #d97706; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 13px;">Rep. Falta</span>
                         {% else %}
                             <span style="background: #fee2e2; color: #dc2626; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 13px;">Recuperação</span>
                         {% endif %}
                     </td>
+
                     <td style="text-align: center;">
                         <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
                             <button onclick="enviarAlerta('{{ aluno.nome }}', '{{ aluno.email }}')" title="Enviar alerta" style="background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 15px;">
@@ -197,7 +199,7 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="10" style="text-align: center; color: var(--text-muted); padding: 20px;">Nenhum aluno matriculado até o momento.</td>
+                    <td colspan="10" style="text-align: center; color: #64748b; padding: 20px;">Nenhum aluno matriculado até o momento.</td>
                 </tr>
                 {% endfor %}
             </tbody>
